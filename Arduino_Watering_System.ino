@@ -238,8 +238,8 @@ void RightHour()
 
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print(clock_date);
-  lcd.setCursor(0, 1);
+  //lcd.print(clock_date);
+  //lcd.setCursor(0, 1);
   lcd.print(clock_hour);
 
   delay(500);
