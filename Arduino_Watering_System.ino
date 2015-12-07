@@ -1,24 +1,24 @@
 /*
 #####################################################################################
-#  	File:               Arduino_Watering_sustem.ino                                             
-#       Processor:          Arduino UNO, MEGA ou Teensy++ 2.0      
-#  	Language:	    Wiring / C /Processing /Fritzing / Arduino IDE          
-#						
-#	Objectives:         Watering System - Irrigation
-#										  
-#	Behavior:	    When the soil is dry,
-#                           
+#  	File:               Arduino_Watering_sustem.ino
+#       Processor:          Arduino UNO, MEGA ou Teensy++ 2.0
+#  	Language:	    Wiring / C /Processing /Fritzing / Arduino IDE
 #
-#			
-#   Author:                 Marcelo Moraes 
-#   Date:                   12/10/12	
-#   place:                  Brazil, Sorocaba City	
-#					
+#	Objectives:         Watering System - Irrigation
+#
+#	Behavior:	    When the soil is dry,
+#
+#
+#
+#   Author:                 Marcelo Moraes
+#   Date:                   12/10/12
+#   place:                  Brazil, Sorocaba City
+#
 #####################################################################################
- 
+
   This project contains public domain code.
   The modification is allowed without notice.
-  
+
  */
 
 // libraries definition
@@ -50,16 +50,16 @@ int j = 0;
 
 // system messages
 const char *string_table[] =
-{   
-  "     Welcome! =)",
-  "   Tank LOW level",
-  "      Dry soil",
-  "     Moist soil",
-  "     Soggy soil",
-  "The water pump is on",
-  "   ArduinoByMyself",
-  "   Watering System",
-  "    Please wait!"
+{
+  " Hola tunante!!",
+  "Nivel agua BAJO!",
+  " ¡Tierra seca!",
+  " Tierra humeda",
+  " Tierra empapada",
+  " Bomba activada!",
+  " Creado by Frank",
+  "Sistema de riego",
+  "Por favor espere"
 };
 
 // objects definition
@@ -70,22 +70,22 @@ LiquidCrystal_I2C lcd(0x27,20,4);
 void setup(){
   // serial initialization
   Serial.begin(9600);
-  
+
   // LCD initialization
-  lcd.init();          
+  lcd.init();
   lcd.backlight();     // with Backlight
   lcd.clear();         // clearscreen
-  
+
   // Wire initialization
   Wire.begin();
-  
+
   // RTC initialization
   RTC.begin();
   if (!RTC.isrunning()){
     // date and time adjust as the PC computer date and time
-    RTC.adjust(DateTime(__DATE__, __TIME__)); 
+    RTC.adjust(DateTime(__DATE__, __TIME__));
   }
-  
+
   // Arduino pins initalization
   pinMode(audioPin, OUTPUT);
   pinMode(soggyLEDPin, OUTPUT);
@@ -93,43 +93,43 @@ void setup(){
   pinMode(drysoilLEDPin,OUTPUT);
   pinMode(pumpLEDPin,OUTPUT);
   pinMode(pumpPin,OUTPUT);
-  
+
   // LCD initial messages
   lcd.clear();
   lcd.setCursor(0,0);
-  lcd.print(string_table[6]); 
+  lcd.print(string_table[6]);
   lcd.setCursor(0,1);
-  lcd.print(string_table[7]); 
+  lcd.print(string_table[7]);
   lcd.setCursor(0,3);
-  lcd.print(string_table[0]); 
+  lcd.print(string_table[0]);
   // initialization delay
-  delay(5000); 
+  delay(5000);
 }
 
 
 void loop(){
-  
-  
+
+
   // RTC parameters definition
   DateTime myRTC = RTC.now();
   int H = myRTC.hour();
   int M = myRTC.minute();
   int S = myRTC.second();
-  
+
   // call Clock Function
   //RightHour();
-  
+
   // reads the sensors
   levelSensorValue = analogRead(levelSensorPin);
   moistureSensorValue = analogRead(moistureSensorPin);
-  
+
   // if low water level: plays the low level alarm
   if(levelSensorValue > 600){
     // system messages
     lcd.clear();
     RightHour();
     lcd.setCursor(0,3);
-    lcd.print(string_table[1]); 
+    lcd.print(string_table[1]);
     // plays the alarm sound
     for(int i=0;i<2;i++){
       tone(audioPin, NOTE_G3, 200);
@@ -139,7 +139,7 @@ void loop(){
       noTone(audioPin);
     }
   }
-  
+
   // check the moisture range
   if(moistureSensorValue >= 700){
     // in case of dry soil:
@@ -176,14 +176,14 @@ void loop(){
     lcd.clear();
     RightHour();
     lcd.setCursor(0,3);
-    lcd.print(string_table[4]); 
+    lcd.print(string_table[4]);
     // lights up the correct LED
     digitalWrite(drysoilLEDPin,LOW);
     digitalWrite(moistsoilLEDPin,LOW);
     digitalWrite(soggyLEDPin,HIGH);
     delay(100);
   }
-  
+
   // if the soil is dry and if it is the right time: turn on the pump for 1 minute
   if((H == 16) && (M == 50) && (S == 00)){
     while(moistureSensorValue >= 700){
@@ -206,7 +206,7 @@ void loop(){
     digitalWrite(pumpPin,LOW);
     digitalWrite(pumpLEDPin,LOW);
   }
-  
+
 }
 
 // Real Time Clock Function
@@ -215,33 +215,33 @@ void RightHour()
   DateTime Now = RTC.now();
   String clock_date = "  Date: ";
   String clock_hour = "   Time: ";
-  
+
   int _day = Now.day();
   int _month = Now.month();
   int _year = Now.year();
-  
+
   clock_date += fixZero(_day);
   clock_date += "/";
   clock_date += fixZero(_month);
   clock_date += "/";
   clock_date += _year;
-  
+
   int _hour = Now.hour();
   int _minute = Now.minute();
   int _second = Now.second();
-  
+
   clock_hour += fixZero(_hour);
   clock_hour += ":";
   clock_hour += fixZero(_minute);
   clock_hour += ":";
   clock_hour += fixZero(_second);
-  
+
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(clock_date);
   lcd.setCursor(0, 1);
   lcd.print(clock_hour);
-  
+
   delay(500);
 }
 
@@ -253,5 +253,3 @@ String fixZero(int i)
   ret += i;
   return ret;
 }
-
-
