@@ -213,8 +213,8 @@ void loop(){
 void RightHour()
 {
   DateTime Now = RTC.now();
-  String clock_date = "  Date: ";
-  String clock_hour = "   Time: ";
+  String clock_date = "  Fecha: ";
+  String clock_hour = "  Hora: ";
 
   int _day = Now.day();
   int _month = Now.month();
