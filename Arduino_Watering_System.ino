@@ -97,11 +97,11 @@ void setup(){
   // LCD initial messages
   lcd.clear();
   lcd.setCursor(0,0);
-  lcd.print(string_table[6]);
-  lcd.setCursor(0,1);
   lcd.print(string_table[7]);
-  lcd.setCursor(0,3);
+  lcd.setCursor(0,1);
   lcd.print(string_table[0]);
+  lcd.setCursor(0,3);
+  //lcd.print(string_table[0]);
   // initialization delay
   delay(5000);
 }
